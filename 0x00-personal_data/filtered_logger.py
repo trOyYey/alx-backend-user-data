@@ -5,7 +5,9 @@ filtered logger mod
 import re
 from typing import List
 import logging
-
+import mysql.connector
+import os
+from datetime import datetime
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
