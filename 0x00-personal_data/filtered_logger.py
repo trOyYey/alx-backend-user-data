@@ -34,6 +34,7 @@ class RedactingFormatter(logging.Formatter):
                                         original_message, self.SEPARATOR)
         return filtered_message
 
+
 def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
     """
