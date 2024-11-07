@@ -7,6 +7,9 @@ from typing import List
 import logging
 
 
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
+
+
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
         """
@@ -53,3 +56,44 @@ def filter_datum(fields: List[str], redaction: str,
         message = re.sub(f + "=.*?" + separator,
                          f + "=" + redaction + separator, message)
     return message
+
+
+def get_logger() -> logging.Logger:
+    """
+    function to get logger with a RedactingFormatter.
+
+    Returns:
+        logging.Logger
+    """
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+    handler = logging.StreamHandler()
+    handler.setFormatter(RedactingFormatter(PII_FIELDS))
+    logger.addHandler(handler)
+    return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    function  that reads the database credentials from the environment
+    variables and creates a MySQL connection object.
+
+    Args:
+        None
+
+    Returns:
+        mysql.connector.connection.MySQLConnection: A MySQL connection object.
+    """
+    user = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    database = os.getenv('PERSONAL_DATA_DB_NAME', '')
+
+    connection = mysql.connector.connect(
+        user=user,
+        password=password,
+        host=host,
+        database=database
+    )
+    return connection
