@@ -16,13 +16,18 @@ class Auth():
         '''
         returns true or false
         '''
-        return False
+        if path is None or excluded_paths is None or excluded_paths == []:
+            return True
+        if path in excluded_paths or path + '/' in excluded_paths:
+            return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         '''
         auth header
         '''
         return None
+
     def current_user(self, request=None) -> TypeVar('User'):
         '''
         Current user
