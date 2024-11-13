@@ -2,7 +2,8 @@
 '''
 basic authentication class
 '''
-from typing import TypeVar
+import base64
+from typing import TypeVar, Tuple
 from flask import request
 from api.v1.auth.auth import Auth
 from models.user import User
@@ -41,3 +42,15 @@ class BasicAuth(Auth):
             return message_bytes.decode('utf-8')
         except base64.binascii.Error:
             return None
+
+    def extract_user_credentials(self, decoded_base64_authorization_header: str
+                                 ) -> Tuple[str, str]:
+        """ tokenize user credentials """
+        if decoded_base64_authorization_header is None:
+            return None, None
+        if not isinstance(decoded_base64_authorization_header, str):
+            return None, None
+        if ':' not in decoded_base64_authorization_header:
+            return None, None
+        values = decoded_base64_authorization_header.split(':')
+        return values[0], values[1]
