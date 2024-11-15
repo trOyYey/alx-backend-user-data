@@ -7,6 +7,7 @@ from models.user import User
 from typing import TypeVar
 import os
 
+
 class Auth():
     '''
     main class for this file
